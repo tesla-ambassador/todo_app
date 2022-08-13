@@ -20,4 +20,4 @@ const colRef = collection(db, 'todos')
 const q = query(colRef, orderBy('timestamp', 'desc'))
 
 export default colRef;
-export {q};
+export {q, db};

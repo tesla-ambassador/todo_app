@@ -2,8 +2,8 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { Button, FormControl, Input, InputLabel } from '@mui/material'
 import Todo from './Todo';
-import colRef, {q} from './firebase';
-import { onSnapshot, addDoc, deleteDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import colRef, {q, db} from './firebase';
+import { onSnapshot, addDoc, deleteDoc, serverTimestamp, doc} from 'firebase/firestore';
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -21,7 +21,7 @@ function App() {
 
   useEffect(() => {
     onSnapshot(q, (snapshot) => {
-      setTodos(snapshot.docs.map(doc => doc.data().todo))
+      setTodos(snapshot.docs.map(doc => ({id: doc.id, todo: doc.data().todo})))
     })
   }, [])
 
@@ -38,8 +38,8 @@ function App() {
 
       <div className='flex justify-center'>
         <ul>
-          {todos.map(todo => (
-            <Todo text={todo} time={'some time period'} />
+          {todos.map((todo, index) => (
+            <Todo key={index} text={todo.todo} time={'some time period'} onClick={() => {deleteDoc(doc(db, "todos", todo.id))}} />
           ))} 
         </ul>
       </div>
